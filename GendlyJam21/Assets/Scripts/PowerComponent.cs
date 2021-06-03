@@ -2,24 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerComponent : MonoBehaviour
+public class PowerComponent : ATower
 {
     public float powerEffect;
 
-    // Start is called before the first frame update
-    void Start()
+    public override void OnPlacement()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void OnPlacement()
-    {
+        base.OnPlacement();
         GameManager.Instance.UpdateGeneration(powerEffect);
     }
 }

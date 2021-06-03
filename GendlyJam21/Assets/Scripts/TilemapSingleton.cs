@@ -13,6 +13,11 @@ public class TilemapSingleton : MonoBehaviour
     private Grid m_tilemapGrid;
     public Grid tilemapGrid => m_tilemapGrid;
 
+    [SerializeField]
+    private Transform m_castlePositionMarker;
+    [SerializeField]
+    private Transform m_enemySpawnPositionMarker;
+
 
     /// <summary>
     /// The cell position of the player's base that enemies are trying to reach.
@@ -45,10 +50,10 @@ public class TilemapSingleton : MonoBehaviour
             return;
         }
 
-        m_invasionPath = FindInvasionPath();
-        castleCell = m_invasionPath[m_invasionPath.Count - 1];
+        castleCell = tilemap.WorldToCell(m_castlePositionMarker.position);
         castlePosition = (Vector2)tilemap.GetCellCenterWorld(castleCell);
-        enemySpawnPoint = m_invasionPath[0];
+        m_invasionPath = FindInvasionPath();
+        enemySpawnPoint = tilemap.WorldToCell(m_enemySpawnPositionMarker.position);
     }
 
     private IReadOnlyList<Vector3Int> FindInvasionPath()
