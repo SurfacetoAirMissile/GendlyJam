@@ -154,6 +154,9 @@ public class GameManager : MonoBehaviour
     // referenced by a button in the demo scene
     public void HoldTower(int _tower)
     {
+
+        // TODO generalize function, to avoid lots of duplicate lines in the future
+
         switch (_tower)
         {
             // power generation
@@ -162,13 +165,20 @@ public class GameManager : MonoBehaviour
                 // set the held object to a new copy of the power object
                 if (heldObject)
                 {
+                    // if the held object is a clone of the button being pressed (powerObject corellates to 0) destroy it (cancel placing)
                     if (heldObject.name.Contains(powerObject.name))
                     {
                         Destroy(heldObject);
                         SetHeldObject(null);
                         return;
                     }
+                    else // if there is a held object but it isn't the same tower, destroy it
+                    {
+                        Destroy(heldObject);
+                        SetHeldObject(null);
+                    }
                 }
+                // in any other case, like when there isn't a held object or when you're switching towers to place, set the held object to be the power object.
                 SetHeldObject(Instantiate(powerObject));
                 return;
         }
