@@ -9,6 +9,9 @@ public class EnemyMovement : MonoBehaviour
     public TilemapSingleton tilemapSingleton => this.CacheFetchComponent(ref m_tilemapSingleton,
         () => TilemapSingleton.Instance);
 
+    private Rigidbody2D m_rb;
+    public Rigidbody2D rb => this.CacheGetComponent(ref m_rb);
+
 
 
     [SerializeField]
@@ -37,28 +40,30 @@ public class EnemyMovement : MonoBehaviour
 
 
 
-    private void Update()
+    private void FixedUpdate()
     {
         var nextTileCell = tilemapSingleton.invasionPath[currentInvasionPathIndex];
         var nextTilePos = (Vector2)tilemapSingleton.tilemap.GetCellCenterWorld(nextTileCell);
-        var movementDistance = this.speed * Time.deltaTime;
+        var movementDistance = this.speed * Time.fixedDeltaTime;
         var finalPos = Vector2.MoveTowards(transform.position, nextTilePos, movementDistance);
+        bool arrived = (finalPos - nextTilePos).sqrMagnitude < 0.01f;
+        rb.MovePosition(arrived ? nextTilePos : finalPos);
         // Assumes this enemy cannot move a distance greater than one tile per update tick.
         transform.position = finalPos.WithZ(transform.position.z);
 
-        if ((finalPos - nextTilePos).sqrMagnitude < 0.01f)
+        if (!arrived)
+            return;
+
+        ++m_currentInvasionPathIndex;
+        if (m_currentInvasionPathIndex == tilemapSingleton.invasionPath.Count)
         {
-            ++m_currentInvasionPathIndex;
-            if (m_currentInvasionPathIndex == tilemapSingleton.invasionPath.Count)
-            {
-                ReachedCastle();
-            }
+            ReachedCastle();
         }
     }
 
     private void ReachedCastle()
     {
-        Destroy(gameObject);
         Debug.LogError("TODO: enemy reached the castle!");
+        Destroy(gameObject);
     }
 }

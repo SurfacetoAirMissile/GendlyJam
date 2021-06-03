@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using CGDP2.Utilities;
 
 public class TowerWeapon : MonoBehaviour
 {
@@ -12,6 +13,11 @@ public class TowerWeapon : MonoBehaviour
     [SerializeField]
     private TowerProjectile m_projectilePrefab;
     public TowerProjectile projectilePrefab => m_projectilePrefab;
+
+
+
+    private TowerPower m_towerPower;
+    public TowerPower towerPower => this.CacheGetComponent(ref m_towerPower);
 
 
 
@@ -36,6 +42,13 @@ public class TowerWeapon : MonoBehaviour
 
     private void Update()
     {
+        CleanEnemiesInRange();
+
+        if (!towerPower.isPlaced)
+            return;
+        if (!towerPower.isPowered)
+            return;
+
         if (UpdateReloadTimeRemaining())
         {
             if (Shoot())
@@ -48,10 +61,9 @@ public class TowerWeapon : MonoBehaviour
     /// <returns>true if it did shoot</returns>
     private bool Shoot()
     {
-        var allEnemies = FindObjectsOfType<EnemyEntity>();
         var castlePosition = TilemapSingleton.Instance.castlePosition;
         // If there are no enemies, it is null.
-        var enemyClosestToCastle = allEnemies.AnyAsNullable()?.MinBy(e => Vector2.SqrMagnitude((Vector2)e.transform.position - castlePosition));
+        var enemyClosestToCastle = m_enemiesInRange.AnyAsNullable()?.MinBy(e => Vector2.SqrMagnitude((Vector2)e.transform.position - castlePosition));
         if (!enemyClosestToCastle)
         {
             return false;
@@ -70,5 +82,29 @@ public class TowerWeapon : MonoBehaviour
             );
         bullet.Init(enemy);
         return true;
+    }
+
+    // Assumes each enemy has only one collider that can trigger this tower's attack range trigger collider.
+    private HashSet<EnemyEntity> m_enemiesInRange = new HashSet<EnemyEntity>();
+
+    private void CleanEnemiesInRange()
+    {
+        m_enemiesInRange.RemoveWhere(e => !e);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        var enemy = collision.GetComponentInParent<EnemyEntity>();
+        if (!enemy)
+            return;
+        m_enemiesInRange.Add(enemy);
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        var enemy = collision.GetComponentInParent<EnemyEntity>();
+        if (!enemy)
+            return;
+        m_enemiesInRange.Remove(enemy);
     }
 }

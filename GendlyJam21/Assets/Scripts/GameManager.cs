@@ -49,6 +49,8 @@ public class GameManager : MonoBehaviour
     [Header("Prefabs")]
     [SerializeField]
     private GameObject powerObject = default;
+    [SerializeField]
+    private GameObject basicTowerPrefab = default;
 
 
 
@@ -110,7 +112,9 @@ public class GameManager : MonoBehaviour
                     if (Input.GetMouseButtonDown(0))
                     {
                         // get component call happens only once.
-                        heldObject.GetComponent<PowerComponent>().OnPlacement();
+                        var tower = heldObject.GetComponent<ATower>();
+                        tower.OnPlacement();
+                        tower.OnCastlePowerChanged(CheckPower());
                         heldObject.GetComponent<BoxCollider2D>().enabled = true;
                         // put the color back to white
                         heldObjectRenderer.color = Color.white;
@@ -145,10 +149,22 @@ public class GameManager : MonoBehaviour
         return generation > 0f;
     }
 
+    /// <changelog>
+    ///     <log date="04/06/2020" time="10:09" author="Elijah Shadbolt">
+    ///         Call all towers OnPowerChanged event.
+    ///     </log>
+    /// </changelog>
     public void UpdateGeneration(float _change)
     {
         generation += _change;
         powerText.text = generation.ToString("0");
+
+        // Invoke the OnCastlePowerChanged event on all Tower instances.
+        bool isPowered = CheckPower();
+        foreach (var tower in ATower.Instances)
+        {
+            tower.OnCastlePowerChanged(isPowered);
+        }
     }
 
     // referenced by a button in the demo scene
@@ -159,20 +175,32 @@ public class GameManager : MonoBehaviour
             // power generation
             default:
             case 0:
-                // set the held object to a new copy of the power object
-                if (heldObject)
-                {
-                    if (heldObject.name.Contains(powerObject.name))
-                    {
-                        Destroy(heldObject);
-                        SetHeldObject(null);
-                        return;
-                    }
-                }
-                SetHeldObject(Instantiate(powerObject));
+                HoldTower(this.powerObject);
+                return;
+            case 1:
+                HoldTower(this.basicTowerPrefab);
                 return;
         }
+    }
 
+    /// <changelog>
+    ///     <log date="04/06/2020" time="10:01" author="Elijah Shadbolt">
+    ///         Added this function to hold the repeated stuff in <see cref="HoldTower(int)"/>.
+    ///     </log>
+    /// </changelog>
+    private void HoldTower(GameObject _towerPrefab)
+    {
+        // set the held object to a new copy of the power object
+        if (heldObject)
+        {
+            if (heldObject.name.Contains(_towerPrefab.name))
+            {
+                Destroy(heldObject);
+                SetHeldObject(null);
+                return;
+            }
+        }
+        SetHeldObject(Instantiate(_towerPrefab, TowerParentSingleton.Instance.theParent));
     }
 
     public void DeductCredits(int _credits)
