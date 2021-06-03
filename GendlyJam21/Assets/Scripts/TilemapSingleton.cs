@@ -5,11 +5,6 @@ using UnityEngine.Tilemaps;
 
 public class TilemapSingleton : MonoBehaviour
 {
-    public static TilemapSingleton Instance => V2_Singleton<TilemapSingleton>.instanceElseLogError;
-    public static TilemapSingleton/*Nullable*/ InstanceNullable => V2_Singleton<TilemapSingleton>.instanceNullable;
-
-
-
     [SerializeField]
     private Tilemap m_tilemap;
     public Tilemap tilemap => m_tilemap;
@@ -19,14 +14,13 @@ public class TilemapSingleton : MonoBehaviour
     public Grid tilemapGrid => m_tilemapGrid;
 
 
-    //[Tooltip(@"The cell position of the player's base that enemies are trying to reach.")]
-    //[SerializeField]
-    private Vector3Int m_castleCell = new Vector3Int(0, 0, 0);
-    public Vector3Int castleCell => m_castleCell;
+    /// <summary>
+    /// The cell position of the player's base that enemies are trying to reach.
+    /// </summary>
+    public Vector3Int castleCell { get; private set; }
+    public Vector2 castlePosition { get; private set; }
 
-    //[SerializeField]
-    private Vector3Int m_enemySpawnPoint = new Vector3Int(-7, 6, 0);
-    public Vector3Int enemySpawnPoint => m_enemySpawnPoint;
+    public Vector3Int enemySpawnPoint { get; private set; }
 
 
 
@@ -39,14 +33,22 @@ public class TilemapSingleton : MonoBehaviour
 
 
 
+
+
+    public static TilemapSingleton Instance => V2_Singleton<TilemapSingleton>.instanceElseLogError;
+    public static TilemapSingleton/*Nullable*/ InstanceNullable => V2_Singleton<TilemapSingleton>.instanceNullable;
+
     private void Awake()
     {
-        if (!V2_Singleton<TilemapSingleton>.OnAwake(this, V2_SingletonDuplicateMode.Ignore))
+        if (!V2_Singleton<TilemapSingleton>.OnAwake(this, V2_SingletonDuplicateMode.DestroyComponent))
         {
             return;
         }
 
         m_invasionPath = FindInvasionPath();
+        castleCell = m_invasionPath[m_invasionPath.Count - 1];
+        castlePosition = (Vector2)tilemap.GetCellCenterWorld(castleCell);
+        enemySpawnPoint = m_invasionPath[0];
     }
 
     private IReadOnlyList<Vector3Int> FindInvasionPath()

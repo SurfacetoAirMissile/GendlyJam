@@ -27,6 +27,7 @@ public class EnemyHealth : MonoBehaviour
 
     public void Kill()
     {
+        // TODO visual death
         Destroy(gameObject);
     }
 }
