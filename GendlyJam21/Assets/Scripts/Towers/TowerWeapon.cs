@@ -15,6 +15,11 @@ public class TowerWeapon : MonoBehaviour
     public TowerProjectile projectilePrefab => m_projectilePrefab;
 
 
+    [SerializeField]
+    private SpriteRenderer m_turretGun;
+    public SpriteRenderer turretGun => m_turretGun;
+
+
 
     private TowerPower m_towerPower;
     public TowerPower towerPower => this.CacheGetComponent(ref m_towerPower);
@@ -48,6 +53,14 @@ public class TowerWeapon : MonoBehaviour
             return;
         if (!towerPower.isPowered)
             return;
+        //
+
+        var enemyClosestToCastle = m_enemiesInRange.AnyAsNullable()?.MinBy(e => Vector2.SqrMagnitude((Vector2)e.transform.position - TilemapSingleton.Instance.castlePosition));
+        if (enemyClosestToCastle)
+        {
+            m_turretGun.transform.right = -(enemyClosestToCastle.transform.position - transform.position);
+        }
+
 
         if (UpdateReloadTimeRemaining())
         {
@@ -76,11 +89,14 @@ public class TowerWeapon : MonoBehaviour
     {
         var bullet = Instantiate(
             projectilePrefab,
-            transform.position,
+            turretGun.transform.position,
             Quaternion.identity,
             ProjectileParentSingleton.Instance.projectileParent
             );
         bullet.Init(enemy);
+
+
+
         return true;
     }
 

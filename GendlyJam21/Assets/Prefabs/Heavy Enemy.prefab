@@ -226,7 +226,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4587384973963507869, guid: 32e829722b11aa3478c7b2737a223edc, type: 3}
       propertyPath: m_spawnDelay
-      value: 1.5
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 4587384973963507869, guid: 32e829722b11aa3478c7b2737a223edc, type: 3}
       propertyPath: m_spawnWeight

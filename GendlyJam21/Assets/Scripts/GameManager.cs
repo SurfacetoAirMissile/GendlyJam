@@ -263,7 +263,7 @@ public class GameManager : MonoBehaviour
     public void UpdateCredits(int _credits)
     {
         credits += _credits;
-        creditsText.text = "$" + credits.ToString("0");
+        creditsText.text = credits.ToString("0");
     }
 
     public bool CanAfford(int _cost)
