@@ -44,14 +44,16 @@ public class EnemyMovement : MonoBehaviour
         {
             return;
         }
+        var prevPos = rb.position;
         var nextTileCell = tilemapSingleton.invasionPath[currentInvasionPathIndex];
         var nextTilePos = (Vector2)tilemapSingleton.tilemap.GetCellCenterWorld((Vector3Int)nextTileCell);
         var movementDistance = this.speed * Time.fixedDeltaTime;
-        var finalPos = Vector2.MoveTowards(transform.position, nextTilePos, movementDistance);
+        var finalPos = Vector2.MoveTowards(prevPos, nextTilePos, movementDistance);
         bool arrived = (finalPos - nextTilePos).sqrMagnitude < 0.001f;
-        rb.MovePosition(arrived ? nextTilePos : finalPos);
+        finalPos = arrived ? nextTilePos : finalPos;
         // Assumes this enemy cannot move a distance greater than one tile per update tick.
-        transform.position = finalPos.WithZ(transform.position.z);
+        rb.MovePosition(finalPos);
+        rb.velocity = (finalPos - prevPos) / Time.fixedDeltaTime;
 
         if (!arrived)
             return;
