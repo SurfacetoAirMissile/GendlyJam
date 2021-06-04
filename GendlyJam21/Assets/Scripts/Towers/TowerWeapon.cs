@@ -92,7 +92,7 @@ public class TowerWeapon : MonoBehaviour
         m_enemiesInRange.RemoveWhere(e => !e);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void OnTriggerEnter2DAction(Collider2D collision)
     {
         var enemy = collision.GetComponentInParent<EnemyEntity>();
         if (!enemy)
@@ -100,7 +100,7 @@ public class TowerWeapon : MonoBehaviour
         m_enemiesInRange.Add(enemy);
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    public void OnTriggerExit2DAction(Collider2D collision)
     {
         var enemy = collision.GetComponentInParent<EnemyEntity>();
         if (!enemy)
