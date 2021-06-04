@@ -41,8 +41,24 @@ public class TilemapSingleton : MonoBehaviour
 
 
 
-    public static TilemapSingleton Instance => V2_Singleton<TilemapSingleton>.instanceElseLogError;
-    public static TilemapSingleton/*Nullable*/ InstanceNullable => V2_Singleton<TilemapSingleton>.instanceNullable;
+    public static TilemapSingleton Instance => V2_Singleton<TilemapSingleton>.instanceElseLogError.EnsureInit();
+    public static TilemapSingleton/*Nullable*/ InstanceNullable => V2_Singleton<TilemapSingleton>.instanceNullable.AsTrueNullable()?.EnsureInit();
+
+    private bool m_initted = false;
+    private TilemapSingleton EnsureInit()
+    {
+        if (m_initted)
+            return this;
+
+        m_initted = true;
+
+        castleCell = (Vector2Int)tilemap.WorldToCell(m_castlePositionMarker.position);
+        castlePosition = (Vector2)tilemap.GetCellCenterWorld((Vector3Int)castleCell);
+        enemySpawnPoint = (Vector2Int)tilemap.WorldToCell(m_enemySpawnPositionMarker.position);
+        m_invasionPath = FindInvasionPath();
+
+        return this;
+    }
 
     private void Awake()
     {
@@ -51,10 +67,7 @@ public class TilemapSingleton : MonoBehaviour
             return;
         }
 
-        castleCell = (Vector2Int)tilemap.WorldToCell(m_castlePositionMarker.position);
-        castlePosition = (Vector2)tilemap.GetCellCenterWorld((Vector3Int)castleCell);
-        enemySpawnPoint = (Vector2Int)tilemap.WorldToCell(m_enemySpawnPositionMarker.position);
-        m_invasionPath = FindInvasionPath();
+        EnsureInit();
     }
 
     private IReadOnlyList<Vector2Int> FindInvasionPath()
