@@ -13,6 +13,9 @@ public class EnemyHealth : MonoBehaviour
     private Slider m_healthBar;
     public Slider healthBar => m_healthBar;
 
+    [SerializeField]
+    private GameObject m_deathAnim;
+
     private void ApplyToHealthBar()
     {
         if (!healthBar)
@@ -43,7 +46,8 @@ public class EnemyHealth : MonoBehaviour
 
     public void Kill()
     {
-        // TODO visual death
+        m_deathAnim.transform.SetParent(DeathAnimParentSingleton.Instance.theParent);
+        m_deathAnim.SetActive(true);
         Destroy(gameObject);
     }
 }
