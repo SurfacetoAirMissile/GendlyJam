@@ -6,15 +6,33 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    public interface IReadOnlyTileGameInfo
+    {
+        bool canPlace { get; }
+        bool canEnemiesWalk { get; }
+    }
+
     [System.Serializable]
-    private class TileGameInfo
+    private class TileGameInfo : IReadOnlyTileGameInfo
     {
         public bool canPlace;
+        public bool canEnemiesWalk;
+
+        bool IReadOnlyTileGameInfo.canPlace => this.canPlace;
+        bool IReadOnlyTileGameInfo.canEnemiesWalk => this.canEnemiesWalk;
     }
 
 
 
     private Dictionary<Sprite, TileGameInfo> tileData;
+
+    /// <returns><see langword="null"/> if the sprite is not in the dictionary.</returns>
+    public IReadOnlyTileGameInfo TryGetTileData(Sprite tileSprite)
+    {
+        return tileData.TryGetValueNullable(tileSprite);
+    }
+
+
 
     public static GameManager Instance { get; private set; } = null;
 

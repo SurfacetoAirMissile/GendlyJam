@@ -26,15 +26,13 @@ public class EnemyMovement : MonoBehaviour
     /// Cannot be called before this script's <see cref="Start"/> event.
     /// </summary>
     public int currentInvasionPathIndex => m_currentInvasionPathIndex;
-    private int m_currentInvasionPathIndex = -1;
+    private int m_currentInvasionPathIndex = 0;
 
 
 
     private void Start()
     {
-        m_currentInvasionPathIndex = 0;
-
-        var pos = (Vector2)tilemapSingleton.tilemap.GetCellCenterWorld(tilemapSingleton.enemySpawnPoint);
+        var pos = (Vector2)tilemapSingleton.tilemap.GetCellCenterWorld((Vector3Int)tilemapSingleton.enemySpawnPoint);
         transform.position = pos.WithZ(transform.position.z);
     }
 
@@ -42,11 +40,15 @@ public class EnemyMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (tilemapSingleton.invasionPath.Count == 0)
+        {
+            return;
+        }
         var nextTileCell = tilemapSingleton.invasionPath[currentInvasionPathIndex];
-        var nextTilePos = (Vector2)tilemapSingleton.tilemap.GetCellCenterWorld(nextTileCell);
+        var nextTilePos = (Vector2)tilemapSingleton.tilemap.GetCellCenterWorld((Vector3Int)nextTileCell);
         var movementDistance = this.speed * Time.fixedDeltaTime;
         var finalPos = Vector2.MoveTowards(transform.position, nextTilePos, movementDistance);
-        bool arrived = (finalPos - nextTilePos).sqrMagnitude < 0.01f;
+        bool arrived = (finalPos - nextTilePos).sqrMagnitude < 0.001f;
         rb.MovePosition(arrived ? nextTilePos : finalPos);
         // Assumes this enemy cannot move a distance greater than one tile per update tick.
         transform.position = finalPos.WithZ(transform.position.z);
