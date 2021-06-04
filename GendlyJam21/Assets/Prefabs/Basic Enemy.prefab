@@ -224,6 +224,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4587384973963507869, guid: 32e829722b11aa3478c7b2737a223edc, type: 3}
+      propertyPath: m_spawnDelay
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4587384973963507869, guid: 32e829722b11aa3478c7b2737a223edc, type: 3}
+      propertyPath: m_spawnWeight
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6386268254358501824, guid: 32e829722b11aa3478c7b2737a223edc, type: 3}
       propertyPath: m_RootOrder
       value: 0
