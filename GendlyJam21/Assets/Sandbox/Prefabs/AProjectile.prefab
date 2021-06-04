@@ -164,6 +164,7 @@ MonoBehaviour:
   m_speed: 10
   m_selfDestructTimeRemaining: 3
   m_explosion: {fileID: 2924282135907016165}
+  m_explosionSoundPrefab: {fileID: 2416070547139381367, guid: fd065a9658fce5d479d0ccb29093e463, type: 3}
 --- !u!1 &5479094572935196463
 GameObject:
   m_ObjectHideFlags: 0

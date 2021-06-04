@@ -14,6 +14,9 @@ public class TowerWeapon : MonoBehaviour
     private TowerProjectile m_projectilePrefab;
     public TowerProjectile projectilePrefab => m_projectilePrefab;
 
+    [SerializeField]
+    private SoundEffect m_shootSoundPrefab;
+
 
 
     private TowerPower m_towerPower;
@@ -81,6 +84,15 @@ public class TowerWeapon : MonoBehaviour
             ProjectileParentSingleton.Instance.projectileParent
             );
         bullet.Init(enemy);
+
+        CgdUtils.TryElseLog(() =>
+        {
+            if (m_shootSoundPrefab)
+            {
+                SoundEffectsParentSingleton.Instance.PlaySound(m_shootSoundPrefab, transform.position);
+            }
+        });
+
         return true;
     }
 

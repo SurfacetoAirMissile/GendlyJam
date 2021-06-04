@@ -163,6 +163,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_reloadDuration: 0.3
   m_projectilePrefab: {fileID: 7124535642871286501, guid: e65109f53c7ac7d46a454020bcadd3c1, type: 3}
+  m_shootSoundPrefab: {fileID: 2416070547139381367, guid: 1f309e48aadbeb948acad209d76579f8, type: 3}
 --- !u!212 &7309302818031383128
 SpriteRenderer:
   m_ObjectHideFlags: 0
