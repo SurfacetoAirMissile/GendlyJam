@@ -75,7 +75,18 @@ namespace Baiji.Pathfinding
 			return latestStepEvent;
 		}
 
-		public IPathfinderStepEvent Step() => innerPathfinder.Step();
+		public IPathfinderStepEvent Step()
+		{
+			if (innerPathfinder.boundary.TryDequeue(out var current))
+			{
+				return Step(current);
+			}
+			else
+			{
+				latestStepEvent = new ExhaustedBoundaryStepEvent();
+				return latestStepEvent;
+			}
+		}
 
 		public IPathfinderStepEvent StepUntilGoal()
 		{
