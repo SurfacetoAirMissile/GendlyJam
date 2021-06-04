@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CGDP2.Utilities;
+using UnityEngine.SceneManagement;
 
 public class EnemyMovement : MonoBehaviour
 {
@@ -67,7 +68,8 @@ public class EnemyMovement : MonoBehaviour
 
     private void ReachedCastle()
     {
-        Debug.LogError("TODO: enemy reached the castle!");
+        //Debug.LogError("TODO: enemy reached the castle!");
+        SceneManager.LoadScene("loss screen");
         Destroy(gameObject);
     }
 }

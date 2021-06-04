@@ -7,8 +7,7 @@ using SimpleJSON;
 
 public class HandleTextFile
 {
-    [MenuItem("Tools/Write file")]
-    static void WriteString(string _write)
+    public static void WriteLine(string _write)
     {
         string path = "Assets/Resources/highscores.txt";
 
@@ -26,8 +25,7 @@ public class HandleTextFile
 
     }
 
-    [MenuItem("Tools/Read file")]
-    static string ReadString()
+    public static string ReadString()
     {
         string path = "Assets/Resources/highscores.txt";
 

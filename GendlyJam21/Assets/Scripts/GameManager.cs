@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance { get; private set; } = null;
 
-
+    private float globalTimer = 0f;
     private GameObject heldObject = null;
     private SpriteRenderer heldObjectRenderer = null;
     //private
@@ -175,6 +175,8 @@ public class GameManager : MonoBehaviour
                 heldObjectRenderer.color = cannotPlaceTint;
             }
         }
+
+        globalTimer += Time.deltaTime;
     }
 
     private void SetHeldObject(GameObject _object)
@@ -271,6 +273,8 @@ public class GameManager : MonoBehaviour
 
     private void OnDestroy()
     {
+        HandleTextFile.WriteLine("\n" + globalTimer.ToString("0.00") + " seconds!");
         Instance = null;
+
     }
 }
