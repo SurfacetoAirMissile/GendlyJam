@@ -190,7 +190,7 @@ public class GameManager : MonoBehaviour
 
     public bool CheckPower()
     {
-        return generation > 0f;
+        return generation >= 0f;
     }
 
     /// <changelog>

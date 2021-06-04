@@ -212,7 +212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b8e25f468fa4584886bc308e8950033, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_powerConsumed: 1
+  m_powerConsumed: 3
   m_spriteRenderer: {fileID: 7309302818031383128}
 --- !u!61 &310901205696713338
 BoxCollider2D:
@@ -252,4 +252,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a4e1775c4bdf904c91f9d0b006f4bbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  price: 50
+  price: 100

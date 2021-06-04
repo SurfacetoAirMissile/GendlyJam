@@ -276,8 +276,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_maxHealth: 100
-  m_reward: 50
+  m_reward: 25
   m_healthBar: {fileID: 7444627130985604604}
+  m_deathAnim: {fileID: 0}
 --- !u!114 &7444627131341246630
 MonoBehaviour:
   m_ObjectHideFlags: 0
