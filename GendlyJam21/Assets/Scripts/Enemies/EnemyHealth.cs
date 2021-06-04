@@ -10,6 +10,10 @@ public class EnemyHealth : MonoBehaviour
     public float maxHealth => m_maxHealth;
 
     [SerializeField]
+    private int m_reward = 50;
+    public int reward => m_reward;
+
+    [SerializeField]
     private Slider m_healthBar;
     public Slider healthBar => m_healthBar;
 
@@ -45,5 +49,6 @@ public class EnemyHealth : MonoBehaviour
     {
         // TODO visual death
         Destroy(gameObject);
+        GameManager.Instance.UpdateCredits(m_reward);
     }
 }

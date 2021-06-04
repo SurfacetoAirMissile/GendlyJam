@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 7309302818031383130}
   - component: {fileID: 7309302818031383131}
   - component: {fileID: 310901205696713338}
+  - component: {fileID: 8442475882916261680}
   m_Layer: 0
   m_Name: Basic Tower
   m_TagString: Untagged
@@ -239,3 +240,16 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &8442475882916261680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7309302818031383134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a4e1775c4bdf904c91f9d0b006f4bbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  price: 50

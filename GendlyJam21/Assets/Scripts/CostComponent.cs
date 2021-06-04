@@ -20,6 +20,6 @@ public class CostComponent : MonoBehaviour
 
     public void OnPlacement()
     {
-        GameManager.Instance.DeductCredits(price);
+        GameManager.Instance.UpdateCredits(-price);
     }
 }
