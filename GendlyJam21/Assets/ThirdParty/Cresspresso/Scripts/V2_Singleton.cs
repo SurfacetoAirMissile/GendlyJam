@@ -55,25 +55,25 @@ public static class V2_Singleton<T> where T : Component
 			}
 			return m_instance;
 		}
-	}
+    }
 
-	/// <summary>
-	/// The current instance of this singleton in the scene.
-	/// </summary>
-	public static T instanceElseLogError
-	{
-		get
-		{
-			var m = instanceNullable;
-			if (!m)
-			{
-				Debug.LogError(typeof(T).Name + " Singleton instance not found in scene!");
-			}
-			return m;
-		}
-	}
+    /// <summary>
+    /// The current instance of this singleton in the scene.
+    /// </summary>
+    public static T instanceElseLogError
+    {
+        get
+        {
+            var m = instanceNullable;
+            if (!m)
+            {
+                Debug.LogError(typeof(T).Name + " Singleton instance not found in scene!");
+            }
+            return m;
+        }
+    }
 
-	public static T GetOrCreate(Func<T> create)
+    public static T GetOrCreate(Func<T> create)
 	{
 		var m = instanceNullable;
 		if (!m)
