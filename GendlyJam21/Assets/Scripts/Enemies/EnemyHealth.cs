@@ -50,8 +50,11 @@ public class EnemyHealth : MonoBehaviour
 
     public void Kill()
     {
-        m_deathAnim.transform.SetParent(DeathAnimParentSingleton.Instance.theParent);
-        m_deathAnim.SetActive(true);
+        if (m_deathAnim)
+        {
+            m_deathAnim.transform.SetParent(DeathAnimParentSingleton.Instance.theParent);
+            m_deathAnim.SetActive(true);
+        }
         Destroy(gameObject);
         GameManager.Instance.UpdateCredits(m_reward);
     }
