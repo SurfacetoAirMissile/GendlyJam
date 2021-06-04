@@ -10,8 +10,6 @@ public static class EnemyPathFinder
 {
     public static IEnumerable<Vector2Int> FindPath(Vector2Int start, Vector2Int goal)
     {
-        Debug.Log("start: " + start);
-        Debug.Log("Goal: " + goal);
         var impl = new EnemyPathFinderImpl(
             goal,
             TilemapSingleton.Instance,
@@ -20,13 +18,6 @@ public static class EnemyPathFinder
         var startData = new AStarPathfinder.AStarPathNodeData(0.0f, impl.HeuristicCost(start), default);
         var startNode = new EnemyPathFinderImpl.AStarUserProvidedNode(start, startData);
         var pathfinder = new AStarPathfinder(impl, startNode);
-        //var step = pathfinder.Step();
-        //Debug.Log(step);
-        //while (!(step is ExhaustedBoundaryStepEvent))
-        //{
-        //    step = pathfinder.Step();
-        //    Debug.Log(step);
-        //}
         var finalStep = pathfinder.StepUntilGoal();
         if (finalStep is EnemyPathFinderImpl.FoundGoalStepEvent foundGoal)
         {
@@ -66,7 +57,6 @@ internal class EnemyPathFinderImpl : AStarPathfinder.AStarImplementation
 
     public override bool FoundGoal(IReadOnlyNode node, INodePathfinderStepEvent stepEvent)
     {
-        Debug.Log("Compare: " + node.id);
         return node.id == goal;
     }
 
