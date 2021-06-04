@@ -20,6 +20,9 @@ public class TowerProjectile : MonoBehaviour
     private float m_selfDestructTimeRemaining = 3.0f;
     public float selfDestructTimeRemaining => m_selfDestructTimeRemaining;
 
+    [SerializeField]
+    private GameObject m_explosion;
+
     private Vector2 prevDirection /*normalized*/ = Vector2.zero;
 
     private bool UpdateSelfDestructTimer()
@@ -95,7 +98,11 @@ public class TowerProjectile : MonoBehaviour
 
     private void Explode()
     {
-        // TODO visual explosion
+        if (m_explosion)
+        {
+            m_explosion.transform.SetParent(transform.parent);
+            m_explosion.SetActive(true);
+        }
         Destroy(gameObject);
     }
 }
