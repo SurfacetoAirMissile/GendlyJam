@@ -19,6 +19,9 @@ public class TowerWeapon : MonoBehaviour
     private SpriteRenderer m_turretGun;
     public SpriteRenderer turretGun => m_turretGun;
 
+    [SerializeField]
+    private SoundEffect m_shootSoundPrefab;
+
 
 
     private TowerPower m_towerPower;
@@ -95,7 +98,13 @@ public class TowerWeapon : MonoBehaviour
             );
         bullet.Init(enemy);
 
-
+        CgdUtils.TryElseLog(() =>
+        {
+            if (m_shootSoundPrefab)
+            {
+                SoundEffectsParentSingleton.Instance.PlaySound(m_shootSoundPrefab, transform.position);
+            }
+        });
 
         return true;
     }

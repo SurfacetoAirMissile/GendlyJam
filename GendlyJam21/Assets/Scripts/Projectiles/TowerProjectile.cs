@@ -23,6 +23,9 @@ public class TowerProjectile : MonoBehaviour
     [SerializeField]
     private GameObject m_explosion;
 
+    [SerializeField]
+    private SoundEffect m_explosionSoundPrefab;
+
     private Vector2 prevDirection /*normalized*/ = Vector2.zero;
 
     private bool UpdateSelfDestructTimer()
@@ -103,6 +106,15 @@ public class TowerProjectile : MonoBehaviour
             m_explosion.transform.SetParent(transform.parent);
             m_explosion.SetActive(true);
         }
+
+        CgdUtils.TryElseLog(() =>
+        {
+            if (m_explosionSoundPrefab)
+            {
+                SoundEffectsParentSingleton.Instance.PlaySound(m_explosionSoundPrefab, transform.position);
+            }
+        });
+
         Destroy(gameObject);
     }
 }
