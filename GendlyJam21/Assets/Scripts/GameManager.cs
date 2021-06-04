@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour
     /// <returns><see langword="null"/> if the sprite is not in the dictionary.</returns>
     public IReadOnlyTileGameInfo TryGetTileData(Sprite tileSprite)
     {
+        if (!tileSprite)
+        { return null; }
         return tileData.TryGetValueNullable(tileSprite);
     }
 
