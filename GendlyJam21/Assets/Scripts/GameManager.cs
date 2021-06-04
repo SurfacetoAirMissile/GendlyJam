@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour
     /// <returns><see langword="null"/> if the sprite is not in the dictionary.</returns>
     public IReadOnlyTileGameInfo TryGetTileData(Sprite tileSprite)
     {
+        if (!tileSprite)
+        { return null; }
         return tileData.TryGetValueNullable(tileSprite);
     }
 
@@ -64,6 +66,8 @@ public class GameManager : MonoBehaviour
     private Color canPlaceTint = default;
     [SerializeField]
     private Color cannotPlaceTint = default;
+    [SerializeField]
+    private Color cannotAffordTint = default;
     [Header("Prefabs")]
     [SerializeField]
     private GameObject powerObject = default;
@@ -86,6 +90,9 @@ public class GameManager : MonoBehaviour
             {
                 tileData.Add(sprites[i], info[i]);
             }
+
+            UpdateGeneration(0f);
+            UpdateCredits(0);
 
         }
     }
@@ -117,27 +124,48 @@ public class GameManager : MonoBehaviour
             if (hoverTileInfo.canPlace)
             {
                 // if there was no result testing the tower layer...
-                RaycastHit2D raycastResult = Physics2D.Raycast(newPos, -Vector2.up, 1f, LayerMask.GetMask("Tower"));
+                RaycastHit2D raycastResult = Physics2D.Raycast(newPos, -Vector2.up, 0.01f, LayerMask.GetMask("Tower"));
                 if (!raycastResult)
                 {
-                    // tint the tower red
+                    CostComponent costComp = heldObject.GetComponent<CostComponent>();
+
+                    // tint the tower green
                     heldObjectRenderer.color = canPlaceTint;
                     // I'm using cell to world after doing world to cell to get the exact position of the cell, so that the tower is placed on the center
                     heldObject.transform.position = tilemap.GetCellCenterWorld(gridPosition);
                     tintRed = false;
 
-                    // if the left mouse button is pressed...
-                    if (Input.GetMouseButtonDown(0))
+                    if (CanAfford(costComp.price))
                     {
-                        // get component call happens only once.
-                        var tower = heldObject.GetComponent<ATower>();
-                        tower.OnPlacement();
-                        tower.OnCastlePowerChanged(CheckPower());
-                        heldObject.GetComponent<BoxCollider2D>().enabled = true;
-                        // put the color back to white
-                        heldObjectRenderer.color = Color.white;
-                        SetHeldObject(null);
+                        // if the left mouse button is pressed...
+                        if (Input.GetMouseButtonDown(0))
+                        {
+
+                            // get component call happens only once.
+                            var tower = heldObject.GetComponent<ATower>();
+                            tower.OnPlacement();
+                            tower.OnCastlePowerChanged(CheckPower());
+                            // if the tower has a cost component
+                            if (costComp)
+                            {
+                                // deduct the cost
+                                costComp.OnPlacement();
+                            }
+                            heldObject.GetComponent<BoxCollider2D>().enabled = true;
+                            // put the color back to white
+                            heldObjectRenderer.color = Color.white;
+                            SetHeldObject(null);
+                        }
                     }
+                    else
+                    {
+                        heldObjectRenderer.color = cannotAffordTint;
+                        // I'm using cell to world after doing world to cell to get the exact position of the cell, so that the tower is placed on the center
+                        heldObject.transform.position = tilemap.GetCellCenterWorld(gridPosition);
+                        tintRed = false;
+                    }
+                    
+                    
                 }
                 
             }
@@ -164,7 +192,7 @@ public class GameManager : MonoBehaviour
 
     public bool CheckPower()
     {
-        return generation > 0f;
+        return generation >= 0f;
     }
 
     /// <changelog>
@@ -175,7 +203,7 @@ public class GameManager : MonoBehaviour
     public void UpdateGeneration(float _change)
     {
         generation += _change;
-        powerText.text = generation.ToString("0");
+        powerText.text = generation.ToString("0") + " MW";
 
         // Invoke the OnCastlePowerChanged event on all Tower instances.
         bool isPowered = CheckPower();
@@ -188,6 +216,9 @@ public class GameManager : MonoBehaviour
     // referenced by a button in the demo scene
     public void HoldTower(int _tower)
     {
+
+        // TODO generalize function, to avoid lots of duplicate lines in the future
+
         switch (_tower)
         {
             // power generation
@@ -208,22 +239,34 @@ public class GameManager : MonoBehaviour
     /// </changelog>
     private void HoldTower(GameObject _towerPrefab)
     {
-        // set the held object to a new copy of the power object
         if (heldObject)
         {
+            // if the held object is a clone of the button being pressed (powerObject corellates to 0) destroy it (cancel placing)
             if (heldObject.name.Contains(_towerPrefab.name))
             {
                 Destroy(heldObject);
                 SetHeldObject(null);
                 return;
             }
+            else // if there is a held object but it isn't the same tower, destroy the held object and set the power object to be the new one.
+            {
+                Destroy(heldObject);
+                SetHeldObject(null);
+            }
         }
+        // in any other case, like when there isn't a held object or when you're switching towers to place, set the held object to be the power object.
         SetHeldObject(Instantiate(_towerPrefab, TowerParentSingleton.Instance.theParent));
     }
 
-    public void DeductCredits(int _credits)
+    public void UpdateCredits(int _credits)
     {
-        credits -= _credits;
+        credits += _credits;
+        creditsText.text = "$" + credits.ToString("0");
+    }
+
+    public bool CanAfford(int _cost)
+    {
+        return credits >= _cost;
     }
 
     private void OnDestroy()

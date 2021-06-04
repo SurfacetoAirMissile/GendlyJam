@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3560891624299717668}
   - component: {fileID: 6698476903779934138}
   - component: {fileID: 113524525079198999}
+  - component: {fileID: 8985911836545826564}
   m_Layer: 6
   m_Name: power
   m_TagString: Untagged
@@ -123,3 +124,16 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &8985911836545826564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 652694617115074486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a4e1775c4bdf904c91f9d0b006f4bbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  price: 50
